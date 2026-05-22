@@ -1,50 +1,23 @@
-# Docklike Taskbar for Xfce
+# Estoy's Custom Docklike Taskbar for Xfce
+This is a modification of the Dock Taskbar plugin. You can find the original here: https://gitlab.xfce.org/panel-plugins/xfce4-docklike-plugin.
 
-A modern, minimalist taskbar for Xfce
+I am developing this project based on my own needs and those of some of my friends, which is why several files are currently missing, such as the localization/translation files.
 
-Docklike Taskbar behaves similarly to many other desktop environments and operating systems. Wherein all application windows are grouped together as an icon and can be pinned to act as a launcher when the application is not running. Commonly referred to as a dock.
+## New features
+I have not yet implemented any new features.
 
-For usage instructions, keyboard shortcuts, and screenshots, see:
-<https://docs.xfce.org/panel-plugins/xfce4-docklike-plugin/start>.
-
-## Build & Install
-
+## Install
+### Auto
+As soon as I implement any new features for this dock, I will work on integrating it into my [custom pacman repository](https://github.com/EstoyAburridowGH/pacman-repository).
+### Manual
+#### Instalation
+Clone/download this repository and run:
 ```bash
-tar xvf xfce4-docklike-plugin-<version>.tar.xz && cd xfce4-docklike-plugin-<version>
 meson setup build 
 meson compile -C build 
 sudo meson install -C build
 ```
-
-### From git
-
-```bash
-git clone https://gitlab.xfce.org/panel-plugins/xfce4-docklike-plugin.git && cd xfce4-docklike-plugin
-meson setup build
-meson compile -C build
-sudo meson install -C build
-```
-
-### Uninstallation
-
+#### Uninstallation
 ```bash
 sudo ninja uninstall -C build
 ```
-
-## Reporting bugs
-
-To assist with troubleshooting plugin issues, please run Xfce Panel in debugging mode, and include the relevant output in issues.
-
-<https://gitlab.xfce.org/panel-plugins/xfce4-docklike-plugin/-/issues>
-
-### Running Xfce Panel in debugging mode
-
-- Open a terminal
-- Quit the Xfce Panel using `xfce4-panel -q`
-- Start the panel in debugging mode with `G_MESSAGES_PREFIXED= G_MESSAGES_DEBUG=xfce4-docklike-plugin xfce4-panel`
-- Perform any actions you want to debug and copy the relevant output
-- Stop debugging by pressing `Ctrl^C`
-- Start the panel again using `xfce4-panel &`
-
-The Xfce wiki has more details on panel debugging:
-<https://docs.xfce.org/xfce/xfce4-panel/debugging>.
