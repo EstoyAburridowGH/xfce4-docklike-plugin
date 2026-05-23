@@ -24,6 +24,7 @@
 #include "GroupWindow.hpp"
 #include "Helpers.hpp"
 #include "State.ipp"
+#include "UnityLauncher.hpp"
 
 #include <gtk/gtk.h>
 #include <math.h>
@@ -76,6 +77,7 @@ public:
 
 	void resize();
 	void updateStyle();
+	void updateUnityCount(int64_t count, bool visible);
 
 	void onDraw(cairo_t* cr);
 	void onWindowActivate(GroupWindow* groupWindow);
@@ -107,6 +109,9 @@ public:
 	GtkWidget* mButton;
 	GtkWidget* mLabel;
 	GtkWidget* mImage;
+	PangoLayout* mUnityLayout;
+	int64_t mUnityCount;
+	bool mUnityCountVisible;
 	GdkPixbuf* mIconPixbuf;
 	GtkWidget* mContextMenu;
 

@@ -31,6 +31,9 @@ Group::Group(std::shared_ptr<AppInfo> appInfo, bool pinned) : mGroupMenu(this)
 	mTopWindowIndex = 0;
 	mActive = false;
 	mWindowMenuShown = false;
+	mUnityCount = 0;
+	mUnityCountVisible = false;
+	mUnityLayout = nullptr;
 
 	//--------------------------------------------------
 
@@ -226,6 +229,8 @@ Group::~Group()
 
 	if (mIconPixbuf != nullptr)
 		g_object_unref(mIconPixbuf);
+
+	g_clear_object(&mUnityLayout);
 }
 
 void Group::add(GroupWindow* window)
@@ -761,6 +766,45 @@ void Group::onDraw(cairo_t* cr)
 		break;
 	}
 	}
+
+	if (mUnityLayout != nullptr) {
+		int tw, th;
+		pango_layout_get_pixel_size(mUnityLayout, &tw, &th);
+
+		double pad = -0.5;
+		double bh = th + pad * 2 + 4;
+		double bw = std::max((double)(tw + 4), bh);
+
+		double margin = 3;
+		double bx = w - bw - margin;
+		double by = margin;
+
+		double r = bh / 2.0;
+
+		auto rounded_rect = [](cairo_t* cr2, double x2, double y2, double w2, double h2, double r2) {
+			cairo_new_sub_path(cr2);
+			cairo_arc(cr2, x2 + w2 - r2, y2 + r2, r2, -M_PI_2, 0);
+			cairo_arc(cr2, x2 + w2 - r2, y2 + h2 - r2, r2, 0, M_PI_2);
+			cairo_arc(cr2, x2 + r2, y2 + h2 - r2, r2, M_PI_2, M_PI);
+			cairo_arc(cr2, x2 + r2, y2 + r2, r2, M_PI, -M_PI_2);
+			cairo_close_path(cr2);
+		};
+
+		rounded_rect(cr, bx, by, bw, bh, r);
+		cairo_set_source_rgb(cr, 0x35 / 255.0, 0x35 / 255.0, 0x35 / 255.0);
+		cairo_fill(cr);
+
+		rounded_rect(cr, bx + 2, by + 2, bw - 4, bh - 4, r > 2 ? r - 2 : 0);
+		cairo_set_source_rgb(cr, 0x35 / 255.0, 0x4a / 255.0, 0x56 / 255.0);
+		cairo_fill_preserve(cr);
+		cairo_set_source_rgb(cr, 0x52 / 255.0, 0x95 / 255.0, 0xbf / 255.0);
+		cairo_set_line_width(cr, 1);
+		cairo_stroke(cr);
+
+		cairo_set_source_rgb(cr, 1, 1, 1);
+		cairo_move_to(cr, bx + (bw - tw) / 2.0, by + (bh - th) / 2.0);
+		pango_cairo_show_layout(cr, mUnityLayout);
+	}
 }
 
 void Group::onMouseEnter()
@@ -813,6 +857,29 @@ void Group::updateStyle()
 	{
 		gtk_widget_set_tooltip_text(mButton, mAppInfo->mName.c_str());
 	}
+}
+
+void Group::updateUnityCount(int64_t count, bool visible) {
+	mUnityCount = count;
+	mUnityCountVisible = visible;
+
+	if (visible && count > 0)
+	{
+		if (mUnityLayout == nullptr)
+		{
+			mUnityLayout = gtk_widget_create_pango_layout(mButton, nullptr);
+			PangoFontDescription* desc = pango_font_description_from_string("sans 7");
+			pango_layout_set_font_description(mUnityLayout, desc);
+			pango_font_description_free(desc);
+		}
+
+		gchar* text = g_strdup_printf("%ld", (long)count);
+		pango_layout_set_text(mUnityLayout, text, -1);
+		g_free(text);
+	}
+	else g_clear_object(&mUnityLayout);
+
+	gtk_widget_queue_draw(mButton);
 }
 
 void Group::electNewTopWindow()

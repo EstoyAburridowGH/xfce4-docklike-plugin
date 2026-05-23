@@ -22,6 +22,7 @@
 #include "Helpers.hpp"
 #include "Hotkeys.hpp"
 #include "Plugin.hpp"
+#include "UnityLauncher.hpp"
 
 namespace Plugin
 {
@@ -43,6 +44,14 @@ namespace Plugin
 		Dock::init();
 		Theme::init();
 		Hotkeys::init();
+		UnityLauncher::init();
+
+		UnityLauncher::setUpdateCallback([](const std::string& desktopId, int64_t count, bool visible) {
+			Dock::mGroups.forEach([&](std::pair<const std::shared_ptr<AppInfo>, std::shared_ptr<Group>> pair) {
+				if (pair.first->mId != desktopId) return;
+				pair.second->updateUnityCount(count, visible);
+			});
+		});
 
 		gtk_container_add(GTK_CONTAINER(mXfPlugin), Dock::mBox);
 		xfce_panel_plugin_menu_show_configure(mXfPlugin);
@@ -89,6 +98,7 @@ namespace Plugin
 				Dock::mGroups.clear();
 				AppInfos::finalize();
 				Hotkeys::finalize();
+				UnityLauncher::finalize();
 				Settings::finalize();
 			}),
 			nullptr);

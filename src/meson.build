@@ -26,6 +26,8 @@ plugin_sources = [
   'Store.ipp',
   'Theme.cpp',
   'Theme.hpp',
+  'UnityLauncher.cpp',
+  'UnityLauncher.hpp',
   'Xfw.cpp',
   'Xfw.hpp',
   xfce_revision_h,
