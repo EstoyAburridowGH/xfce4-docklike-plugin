@@ -42,8 +42,6 @@ namespace UnityLauncher {
 					count = count32;
 			}
 
-			if (visible) visible = false;
-
 			g_variant_dict_clear(&dict);
 
 			g_debug("[Unity] %s count=%ld visible=%d", desktopId.c_str(), (long)count, visible);
