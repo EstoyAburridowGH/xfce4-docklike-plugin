@@ -10,8 +10,10 @@ Displays a badge heavily inspired by KDE through the `com.canonical.Unity.Launch
 ![Notifications badge](images/notifications-badge.png)
 
 ## Install
-### Auto
-As soon as I implement any new features for this dock, I will work on integrating it into my [custom pacman repository](https://github.com/EstoyAburridowGH/pacman-repository).
+### AUR
+```bash
+paru/yay -S estoys-custom-xfce4-docklike-plugin-git
+```
 ### Manual
 #### Installation
 Clone/download this repository and run:
